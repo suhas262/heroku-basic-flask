@@ -1,17 +1,19 @@
 from flask import Flask, request
-from datetime import datetime
+import database as dbConn
+
 app = Flask(__name__)
 
 @app.route('/')
 def homepage():
-
-    return "OK"
+    return "here"
 
 
 @app.route("/uploadlog/",methods = ['GET', 'POST', 'DELETE'])
 def getPostDataUploadLog():
     if request.method == 'POST':
-        content = request.data
+        content = request.json
+        print("test")
+        dbConn.insert_to_mongo(content)
         return "OK"
 
 if __name__ == '__main__':
