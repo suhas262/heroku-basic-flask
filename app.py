@@ -18,7 +18,7 @@ def brand_details():
 @app.route("/distance")
 def distance_details():
     distance_details = dbConn.get_distance()
-    return jsonify({"data":distance_details})
+    return jsonify({"name":"bar chart data","data":distance_details})
 
 @app.route("/uploadlog/",methods = ['GET', 'POST', 'DELETE'])
 def getPostDataUploadLog():
