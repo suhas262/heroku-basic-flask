@@ -28,7 +28,7 @@ def get_max_sequence_dict(bool):
     if bool:
         seq_table.insert_one({"seq_no": num1})
     # print(num1)
-    #return 17
+    # return 17
     return num1
 
 
@@ -135,10 +135,21 @@ def get_distance():
 
     coord_dist_dict = []
     distance_dict_count = {}
+    distance_limit_count = 0
+
     for value in coord_table_distance:
-        temp_val = { value['_id']['distance']:value['count']}
+        temp_distance = value['_id']['distance']
+        temp_count = value['count']
+
+        if temp_distance > 9:
+            distance_limit_count += 1
+            continue
+
+        temp_val = {temp_distance: temp_count}
         distance_dict_count.update(temp_val)
 
+    if distance_limit_count:
+        distance_dict_count.update({"'>9'": distance_limit_count})
 
     for k,v in distance_dict_count.items():
         distance = k
