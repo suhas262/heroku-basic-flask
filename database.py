@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 from datetime import datetime
 import pymongo
-
+import math
 
 
 def connect_mongo():
@@ -27,7 +27,8 @@ def get_max_sequence_dict():
         break
     seq_table.insert_one({"seq_no": num1})
     # print(num1)
-    return num1
+    return 17
+    # return num1
 
 
 def insert_to_mongo(data):
@@ -69,3 +70,45 @@ def insert_to_mongo(data):
         # print(db)
         coord_table.insert_one(user_dict)
 
+
+def get_count_phone_percentage():
+    client = connect_mongo()
+    db = client.get_default_database()
+    coord_table = db['coord_table']
+    val = get_max_sequence_dict()
+    print(val)
+    prev_val = val - 1
+    coord_table_count = coord_table.aggregate(
+        [
+            {"$match": {"sequence_no": val - 1}},
+            {"$group": {
+                "_id": {"brand": "$brand"},
+                "count": {
+                    "$sum": 1
+                }}}
+        ]
+    )
+    sequence_no_count = coord_table.find(
+        {"sequence_no": prev_val}
+    ).count()
+
+    brand_percentage_list = []
+    print(sequence_no_count)
+
+    brand_count_dict = {}
+    for value in coord_table_count:
+        # temp_count_val = val['count']
+        # print(temp_count_val)
+
+        temp_val = {value['_id']['brand']: value['count']}
+        brand_count_dict.update(temp_val)
+
+    i = 0
+    for k, v in brand_count_dict.items():
+        brand = k
+        percentage = math.floor((v * 100) / sequence_no_count)
+        temp_list_brand1 = {"percentage": percentage, "brand": brand}
+
+        brand_percentage_list.append(temp_list_brand1)
+
+    return brand_percentage_list
