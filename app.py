@@ -20,6 +20,12 @@ def distance_details():
     distance_details = dbConn.get_distance()
     return jsonify({"name":"bar chart data","data":distance_details})
 
+@app.route("/brandDistribution/<sequence_id>")
+def brand_distribution(sequence_id):
+    sequence_id = sequence_id
+    brand_distribution_data = dbConn.get_brand_distribution(sequence_id,False)
+    return jsonify({"sequence":sequence_id,"data":brand_distribution_data})
+
 @app.route("/uploadlog/",methods = ['GET', 'POST', 'DELETE'])
 def getPostDataUploadLog():
     if request.method == 'POST':
