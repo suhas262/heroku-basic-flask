@@ -57,10 +57,11 @@ def get_sequence_number_data_brand(seq_no):
     return coord_table_count
 
 def get_sequence_number(seq_no):
+    if seq_no is None:
+        seq_no = get_max_sequence_dict() - 1
+        return seq_no
 
-    # if seq_no is None:
-    #     seq_number = get_max_sequence_dict() - 1
-    #     return seq_number
+    seq_no = int(seq_no)
     return seq_no
     # return 17
 
@@ -128,7 +129,7 @@ def insert_to_mongo(data):
 
 def get_count_phone_percentage(seq_no = None):
     seq_no = get_sequence_number(seq_no)
-    seq_no = int(seq_no)
+
 
     coord_table_count = get_sequence_number_data_brand(seq_no)
 
@@ -196,3 +197,7 @@ def get_brand_distribution(seq_no, latest = False):
         return get_count_phone_percentage(get_sequence_number(get_max_sequence_dict()-1))
     return  get_count_phone_percentage(seq_no)
 
+def get_nearby_wifi_count(seq_no = None, latest = False):
+    if latest:
+        return get_distance(get_sequence_number(get_max_sequence_dict()-1))
+    return get_distance(seq_no)

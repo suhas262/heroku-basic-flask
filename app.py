@@ -26,6 +26,19 @@ def brand_distribution(sequence_id):
     brand_distribution_data = dbConn.get_brand_distribution(sequence_id,False)
     return jsonify({"sequence":sequence_id,"data":brand_distribution_data})
 
+@app.route("/NearbyWiFiDevicesCount/<sequence_id>")
+def nearby_wifi_devices_count(sequence_id):
+
+    wifi_details = dbConn.get_nearby_wifi_count(sequence_id,False)
+    return jsonify({"sequence":sequence_id,"data":wifi_details})
+
+@app.route("/latestNearbyWiFiDevicesCount/")
+def latest_nearby_wifi_devices_count():
+    wifi_details = dbConn.get_nearby_wifi_count(None, False)
+    max_sequence_id = dbConn.get_max_sequence_dict() - 1
+    return jsonify({"sequence": max_sequence_id, "data": wifi_details})
+
+
 @app.route("/uploadlog/",methods = ['GET', 'POST', 'DELETE'])
 def getPostDataUploadLog():
     if request.method == 'POST':
