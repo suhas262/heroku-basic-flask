@@ -19,12 +19,9 @@ def brand_details():
 @app.route("/uploadlog/",methods = ['GET', 'POST', 'DELETE'])
 def getPostDataUploadLog():
     if request.method == 'POST':
-        try:
-            content = request.json
-        except ValueError:
-            return jsonify({
-                "status":"Fail"
-            })
+
+        content = request.json
+
         dbConn.insert_to_mongo(content)
 
         return jsonify({

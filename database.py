@@ -27,8 +27,8 @@ def get_max_sequence_dict():
         break
     seq_table.insert_one({"seq_no": num1})
     # print(num1)
-    return 17
-    # return num1
+    # return 17
+    return num1
 
 
 def insert_to_mongo(data):
@@ -76,7 +76,7 @@ def get_count_phone_percentage():
     db = client.get_default_database()
     coord_table = db['coord_table']
     val = get_max_sequence_dict()
-    print(val)
+    # print(val)
     prev_val = val - 1
     coord_table_count = coord_table.aggregate(
         [
