@@ -15,7 +15,7 @@ def connect_mongo():
                 print ("Server not available")
                 return None
 
-def get_max_sequence_dict():
+def get_max_sequence_dict(bool):
     client = connect_mongo()
     db = client.get_default_database()
     seq_table = db['sequence_table']
@@ -25,9 +25,10 @@ def get_max_sequence_dict():
         num1 = int(num) + 1
         # print(num1)
         break
-    seq_table.insert_one({"seq_no": num1})
+    if bool:
+        seq_table.insert_one({"seq_no": num1})
     # print(num1)
-    # return 17
+    #return 17
     return num1
 
 
@@ -41,7 +42,7 @@ def insert_to_mongo(data):
     src_lat_dict.update({'src_lat': log_details['src_lat']})
 
     src_long_dict.update({'src_long': log_details['src_long']})
-    seq_dict = get_max_sequence_dict()
+    seq_dict = get_max_sequence_dict(1)
     # print(seq_dict)
 
     # next_sequence_no, sequence_no = get_max_sequence()
@@ -75,7 +76,7 @@ def get_count_phone_percentage():
     client = connect_mongo()
     db = client.get_default_database()
     coord_table = db['coord_table']
-    val = get_max_sequence_dict()
+    val = get_max_sequence_dict(0)
     # print(val)
     prev_val = val - 1
     coord_table_count = coord_table.aggregate(
@@ -112,3 +113,37 @@ def get_count_phone_percentage():
         brand_percentage_list.append(temp_list_brand1)
 
     return brand_percentage_list
+
+
+def get_distance():
+    client = connect_mongo()
+    db = client.get_default_database()
+    coord_table = db['coord_table']
+    val = get_max_sequence_dict(0)
+
+    prev_val = val - 1
+    coord_table_distance = coord_table.aggregate(
+        [
+            {"$match": {"sequence_no": prev_val}},
+            {"$group": {
+                "_id": {"distance": {"$ceil":"$distance"}},
+                "count": {
+                    "$sum": 1
+                }}}
+        ]
+)
+
+    coord_dist_dict = []
+    distance_dict_count = {}
+    for value in coord_table_distance:
+        temp_val = { value['_id']['distance']:value['count']}
+        distance_dict_count.update(temp_val)
+
+
+    for k,v in distance_dict_count.items():
+        distance = k
+        count = v
+        temp_list_distance = { "distance" : distance,"count":count}
+        coord_dist_dict.append(temp_list_distance)
+
+    return coord_dist_dict
