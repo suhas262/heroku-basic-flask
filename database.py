@@ -4,7 +4,7 @@ from pymongo.errors import ConnectionFailure
 from datetime import datetime
 import pymongo
 import math
-
+from operator import itemgetter
 
 def connect_mongo():
         try:
@@ -146,6 +146,7 @@ def get_count_phone_percentage(seq_no = None):
         temp_list_brand1 = {"percentage": percentage, "brand": brand}
         brand_percentage_list.append(temp_list_brand1)
 
+    brand_percentage_list = sorted(brand_percentage_list, key=itemgetter('percentage'), reverse=True)
     length_list = len(brand_percentage_list)
 
     if length_list >10:
