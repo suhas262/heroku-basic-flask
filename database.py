@@ -129,30 +129,33 @@ def insert_to_mongo(data):
 
 def get_count_phone_percentage(seq_no = None):
     seq_no = get_sequence_number(seq_no)
-
-
     coord_table_count = get_sequence_number_data_brand(seq_no)
-
-
-
     sequence_no_count = get_sequence_number_count(seq_no)
 
     brand_percentage_list = []
     print(sequence_no_count)
-
     brand_count_dict = {}
+
     for value in coord_table_count:
         temp_val = {value['_id']['brand']: value['count']}
         brand_count_dict.update(temp_val)
-
 
     for k, v in brand_count_dict.items():
         brand = k
         percentage = math.floor((v * 100) / sequence_no_count)
         temp_list_brand1 = {"percentage": percentage, "brand": brand}
-
         brand_percentage_list.append(temp_list_brand1)
 
+    length_list = len(brand_percentage_list)
+
+    if length_list >10:
+        sum_index = 0
+        counter = 0
+        for index in range(10,length_list):
+            sum_index += brand_percentage_list[index]['percentage']
+            counter += 1
+        del brand_percentage_list[:-counter]
+        brand_percentage_list.append({ "Others": sum_index })
 
     return brand_percentage_list
 
@@ -191,8 +194,6 @@ def get_distance(seq_no = None):
 
 
 def get_brand_distribution(seq_no, latest = False):
-
-    # return get_count_phone_percentage(get_sequence_number(get_max_sequence_dict()-1))
     if latest:
         return get_count_phone_percentage(get_sequence_number(get_max_sequence_dict()-1))
     return  get_count_phone_percentage(seq_no)
