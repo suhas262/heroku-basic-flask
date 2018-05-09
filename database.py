@@ -204,7 +204,7 @@ def get_distance(seq_no = None):
         distance_dict_count.update(temp_val)
 
     if distance_limit_count:
-        distance_dict_count.update({"'>9'": distance_limit_count})
+        distance_dict_count.update({"10": distance_limit_count})
 
     for k,v in distance_dict_count.items():
         distance = k
