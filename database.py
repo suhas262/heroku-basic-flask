@@ -52,6 +52,7 @@ def get_sequence_number_data_brand(seq_no):
                 "count": {
                     "$sum": 1
                 }}}
+
         ]
     )
     return coord_table_count
@@ -88,6 +89,26 @@ def get_max_sequence_dict():
     # return 17
     return num1
 
+
+def get_records(seq_no):
+        seq_no = get_sequence_number(seq_no)
+        coord_table = get_coord_table()
+        coord_table_record = coord_table.find(
+            {
+                "sequence_no": seq_no
+            }
+        )
+
+        coord_table_dict = []
+        for value in coord_table_record:
+            temp_record_list = {}
+            for record in value:
+                if record != '_id' and record != 'sequence_no':
+                    # temp_list = { record : value[record]}
+                    temp_record_list.update(({record: value[record]}))
+                    # coord_table_dict.append(temp_list)
+            coord_table_dict.append(temp_record_list)
+        return coord_table_dict
 
 def insert_to_mongo(data):
     print("testing")
@@ -203,3 +224,7 @@ def get_nearby_wifi_count(seq_no = None, latest = False):
     if latest:
         return get_distance(get_sequence_number(get_max_sequence_dict()-1))
     return get_distance(seq_no)
+
+
+def get_latest_records(seq_no=None):
+    return get_records(seq_no)
