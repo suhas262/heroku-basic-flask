@@ -9,7 +9,7 @@ from operator import itemgetter
 def connect_mongo():
         try:
                 client = MongoClient('mongodb://root:root@ds155577.mlab.com:55577/geo_coord_db')
-                # print("Server connected")
+               
                 return client
         except ConnectionFailure:
                 print ("Server not available")
@@ -82,11 +82,11 @@ def get_max_sequence_dict():
     for val in seq_table.find().sort('seq_no', pymongo.DESCENDING):
         num = ((val['seq_no']))
         num1 = int(num) + 1
-        # print(num1)
+       
         break
 
 
-    # return 17
+   
     return num1
 
 
@@ -104,9 +104,9 @@ def get_records(seq_no):
             temp_record_list = {}
             for record in value:
                 if record != '_id' and record != 'sequence_no':
-                    # temp_list = { record : value[record]}
+                   
                     temp_record_list.update(({record: value[record]}))
-                    # coord_table_dict.append(temp_list)
+                   
             coord_table_dict.append(temp_record_list)
         return coord_table_dict
 
@@ -138,13 +138,12 @@ def insert_to_mongo(data):
         date_time = datetime.now().strftime('%Y%m%d%H%M%S')
         user_dict.update({'date_time': date_time})
         user_dict.update(seq_dict1)
-        # print(user_dict)
+        
         client = connect_mongo()
         db = client.get_default_database()
-        # seq_table = db['se']
-        # seq_table.insert(seq_dict)
+       
         coord_table = db['coord_table']
-        # print(db)
+       
         coord_table.insert_one(user_dict)
 
 
